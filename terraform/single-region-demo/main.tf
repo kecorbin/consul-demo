@@ -27,28 +27,28 @@ module "cluster_main" {
 }
 
 # Configure Prepared Query on Main Consul Cluster
-# provider "consul" {
-#   address    = "${element(module.cluster_main.consul_servers, 0)}:8500"
-#   datacenter = "${module.cluster_main.consul_dc}"
-# }
-#
-# resource "consul_prepared_query" "product_service" {
-#   datacenter   = "${module.cluster_main.consul_dc}"
-#   name         = "product"
-#   only_passing = true
-#   connect      = true
-#
-#   service = "product"
-#
-#   failover {
-#     datacenters = ["${module.cluster_main.consul_dc}"]
-#   }
-# }
-#
-# resource "consul_keys" "keys" {
-#   key {
-#     path   = "product/run"
-#     value  = "true"
-#     delete = true
-#   }
-# }
+provider "consul" {
+  address    = "${element(module.cluster_main.consul_servers, 0)}:8500"
+  datacenter = "${module.cluster_main.consul_dc}"
+}
+
+resource "consul_prepared_query" "product_service" {
+  datacenter   = "${module.cluster_main.consul_dc}"
+  name         = "product"
+  only_passing = true
+  connect      = true
+
+  service = "product"
+
+  failover {
+    datacenters = ["${module.cluster_main.consul_dc}"]
+  }
+}
+
+resource "consul_keys" "keys" {
+  key {
+    path   = "product/run"
+    value  = "true"
+    delete = true
+  }
+}
